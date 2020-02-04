@@ -14,8 +14,9 @@ public:
 
     void push(T val)
     {
+        shared_ptr<T> data(make_shared<T>(move(val)));
         lock_guard<mutex> lk(m_);
-        dataQueue_.push(move(val));
+        dataQueue_.emplace(move(data));
         dataQueueCond_.notify_one();
     }
 
@@ -23,7 +24,7 @@ public:
     {
         unique_lock<mutex> lk(m_);
         dataQueueCond_.wait(lk, [this]{ return !dataQueue_.empty(); });
-        value = move(dataQueue_.front());
+        value = move(*dataQueue_.front());
         dataQueue_.pop();
     }
 
@@ -31,7 +32,7 @@ public:
     {
         unique_lock<mutex> lk(m_);
         dataQueueCond_.wait(lk, [this] { return !dataQueue_.empty(); });
-        shared_ptr<T> res(make_shared<T>(move(dataQueue_.front())));
+        shared_ptr<T> res(dataQueue_.front());
         dataQueue_.pop();
         return res;
     }
@@ -42,7 +43,7 @@ public:
         if (dataQueue_.empty()) {
             return {};
         }
-        val = move(dataQueue_.front());
+        val = move(*dataQueue_.front());
         dataQueue_.pop();
         return true;
     }
@@ -53,7 +54,7 @@ public:
         if (dataQueue_.empty()) {
             return {};
         }
-        shared_ptr<T> res(make_shared<T>(move(dataQueue_.front())));
+        shared_ptr<T> res(dataQueue_.front());
         dataQueue_.pop();
         return res;
     }
@@ -66,7 +67,7 @@ public:
 
 private:
     mutable mutex m_;
-    queue<T> dataQueue_;
+    queue<shared_ptr<T>> dataQueue_;
     condition_variable dataQueueCond_;
 };
 
@@ -75,12 +76,13 @@ int main()
 {
     ThreadSafeQueue<string> queue;
     queue.push("Marine cost");
+    queue.push("Brazil");
 
     string s;
     queue.tryPop(s);
     cout << s << endl;
 
-    //cout << *queue.tryPop() << endl;
+    cout << *queue.tryPop() << endl;
 
     return 0;
 }
