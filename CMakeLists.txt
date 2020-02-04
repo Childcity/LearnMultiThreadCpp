@@ -1,6 +1,16 @@
 cmake_minimum_required(VERSION 3.10)
 project(LearnMultiThreadC++)
 
+set(CMAKE_CXX_STANDARD 17)
+
+message("Project Dir is: " ${PROJECT_SOURCE_DIR})
+message("Current OS is: " ${CMAKE_SYSTEM_NAME})
+
+if (UNIX)
+    set(CMAKE_CXX_FLAGS "-pthread -Wall -Wno-reorder")
+endif (UNIX)
+
+
 option(BUILD_ThreadSafeQueue "Enable building ThreadSafeQueue" ON)
 option(BUILD_ThreadSafeStack "Enable building ThreadSafeStack" ON)
 
