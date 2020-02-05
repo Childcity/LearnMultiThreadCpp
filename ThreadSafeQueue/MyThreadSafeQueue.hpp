@@ -5,6 +5,13 @@
 #ifndef LEARNMULTITHREADC_MYTHREADSAFEQUEUE_HPP
 #define LEARNMULTITHREADC_MYTHREADSAFEQUEUE_HPP
 
+using std::move;
+using std::shared_ptr;
+using std::make_shared;
+using std::condition_variable;
+using std::lock_guard;
+using std::queue;
+using std::mutex;
 
 template <class T>
 struct MyThreadSafeQueue {
@@ -35,7 +42,7 @@ public:
             return {};
         }
 
-        const shared_ptr<T> res(make_shared<T>(move(head_->Data)));
+        const shared_ptr<T> res = make_shared<T>(move(head_->Data));
 
         const unique_ptr<Node> oldHead = move(head_);
         head_ = move(oldHead->Next);
@@ -45,7 +52,16 @@ public:
 
     void push(T newVal)
     {
-        unique_ptr<Node> p(make_unique<T>(move(newVal)));
+        unique_ptr<Node> p = make_unique<Node>(move(newVal));
+        Node *const newTail = p.get();
+
+        if (tail_) {
+            tail_->Next = move(p);
+        } else {
+            head_ = move(p);
+        }
+
+        tail_ = newTail;
     }
 };
 

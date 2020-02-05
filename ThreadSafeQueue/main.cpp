@@ -2,9 +2,11 @@
 #include "MyThreadSafeQueue.hpp"
 
 #include <iostream>
+#include <string>
 #include <thread>
 #include <atomic>
 
+using namespace std;
 
 int main()
 {
@@ -13,15 +15,15 @@ int main()
     thread t[threadCount];
 
     StdThreadSafeQueue<string> safeQueue;
-    MyThreadSafeQueue<string> mySafeQueue;
     mutex mainMutex;
 
     srand(static_cast<unsigned int>(time(nullptr)));
 
 
     {
-        mySafeQueue.push(new );
-        cout << *mySafeQueue.tryPop();
+        MyThreadSafeQueue<string> mySafeQueue;
+        mySafeQueue.push("Queue !");
+        cout << *mySafeQueue.tryPop() << endl;
         return 0;
     }
 

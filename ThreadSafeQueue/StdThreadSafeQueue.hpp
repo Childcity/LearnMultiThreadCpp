@@ -6,10 +6,17 @@
 #define LEARNMULTITHREADC_STDTHREADSAFEQUEUE_HPP
 
 
-#include <condition_variable>
+#include <mutex>
 #include <queue>
 
-using namespace std;
+using std::move;
+using std::shared_ptr;
+using std::make_shared;
+using std::condition_variable;
+using std::lock_guard;
+using std::unique_lock;
+using std::queue;
+using std::mutex;
 
 template<class T>
 struct StdThreadSafeQueue {
@@ -26,7 +33,7 @@ public:
 
     void push(T val)
     {
-        shared_ptr<T> data(make_shared<T>(move(val)));
+        shared_ptr<T> data = make_shared<T>(move(val));
         lock_guard<mutex> lk(m_);
         data_.emplace(move(data));
         dataCond_.notify_one();
