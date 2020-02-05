@@ -13,9 +13,17 @@ int main()
     thread t[threadCount];
 
     StdThreadSafeQueue<string> safeQueue;
+    MyThreadSafeQueue<string> mySafeQueue;
     mutex mainMutex;
 
     srand(static_cast<unsigned int>(time(nullptr)));
+
+
+    {
+        mySafeQueue.push(new );
+        cout << *mySafeQueue.tryPop();
+        return 0;
+    }
 
 
     for (int i = 0; i < threadCount; ++i) {
