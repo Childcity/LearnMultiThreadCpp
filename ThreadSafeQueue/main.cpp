@@ -22,7 +22,9 @@ int main()
         t[i] = thread{[&](int i){
 
             if(i > 3) {
-                while (startWorking.load(memory_order_acquire)) {
+                while (!startWorking.load(memory_order_acquire)); // wait for all treads started
+
+                while (true) {
                     try {
                         safeQueue.push(to_string(rand())); // NOLINT
 
@@ -36,6 +38,8 @@ int main()
                     }
                 }
             } else {
+                while (!startWorking.load(memory_order_acquire)); // wait for all treads started
+
                 while (true) {
                     try {
                         lock_guard<mutex> lock(mainMutex);
@@ -53,7 +57,7 @@ int main()
     }
 
     // enable all threads
-    startWorking.store(memory_order_release);
+    startWorking.store(true, memory_order_release);
 
     for (auto &i : t) {
         i.join();

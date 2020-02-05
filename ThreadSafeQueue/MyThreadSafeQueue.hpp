@@ -6,7 +6,10 @@
 #define LEARNMULTITHREADC_MYTHREADSAFEQUEUE_HPP
 
 
-int f;
+template <class T>
+struct MyThreadSafeQueue {
+
+};
 
 
 #endif //LEARNMULTITHREADC_MYTHREADSAFEQUEUE_HPP

@@ -12,12 +12,12 @@
 using namespace std;
 
 template<class T>
-class StdThreadSafeQueue {
+struct StdThreadSafeQueue {
 
 private:
-    mutable mutex m_;
-    queue<shared_ptr<T>> data_;
-    condition_variable dataCond_;
+    mutable mutex m_{};
+    queue<shared_ptr<T>> data_{};
+    condition_variable dataCond_{};
 
 public:
     StdThreadSafeQueue() = default;
