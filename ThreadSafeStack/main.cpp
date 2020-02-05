@@ -115,8 +115,6 @@ int main() {
                         cout << "pop: " << *val.get() << " size: " << size << endl;
                     } catch (EmptyStack &ex) {
                         cout << "Empty" << endl;
-                    } catch (EmptyStack &ex) {
-                        cout << "Empty" << endl;
                     } catch (exception &ex){
                         break;
                     }
