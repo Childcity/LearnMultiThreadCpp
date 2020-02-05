@@ -7,6 +7,11 @@ using namespace std;
 template<class T>
 class ThreadSafeQueue {
 
+private:
+    mutable mutex m_;
+    queue<shared_ptr<T>> dataQueue_;
+    condition_variable dataQueueCond_;
+
 public:
     ThreadSafeQueue() = default;
 
@@ -64,11 +69,6 @@ public:
         lock_guard<mutex> lk(m_);
         return dataQueue_.empty();
     }
-
-private:
-    mutable mutex m_;
-    queue<shared_ptr<T>> dataQueue_;
-    condition_variable dataQueueCond_;
 };
 
 
