@@ -5,13 +5,17 @@
 #ifndef LEARNMULTITHREADC_MYTHREADSAFEQUEUE_HPP
 #define LEARNMULTITHREADC_MYTHREADSAFEQUEUE_HPP
 
-using std::move;
+
+#include <memory>
+
 using std::shared_ptr;
 using std::make_shared;
-using std::condition_variable;
-using std::lock_guard;
-using std::queue;
+using std::unique_ptr;
+using std::make_unique;
+//using std::condition_variable;
+//using std::lock_guard;
 using std::mutex;
+using std::move;
 
 template <class T>
 struct MyThreadSafeQueue {
@@ -19,15 +23,15 @@ struct MyThreadSafeQueue {
 private:
     struct Node {
         T Data{};
-        std::unique_ptr<Node> Next{};
+        unique_ptr<Node> Next{};
 
         explicit Node(T data)
-                : Data(std::move(data))
+                : Data(move(data))
         {}
     };
 
 private:
-    std::unique_ptr<Node> head_{};
+    unique_ptr<Node> head_{};
     Node *tail_ = nullptr;
 
 public:

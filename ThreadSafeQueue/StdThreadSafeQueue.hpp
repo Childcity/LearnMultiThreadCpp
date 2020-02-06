@@ -7,6 +7,8 @@
 
 
 #include <mutex>
+#include <memory>
+#include <condition_variable>
 #include <queue>
 
 using std::move;
