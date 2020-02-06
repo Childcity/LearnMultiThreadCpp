@@ -22,49 +22,49 @@ struct MyThreadSafeQueue {
 
 private:
     struct Node {
-        T Data{};
+        shared_ptr<T> Data{};
         unique_ptr<Node> Next{};
 
-        explicit Node(T data)
-                : Data(move(data))
-        {}
+//        explicit Node(T data)
+//                : Data(move(data))
+//        {}
     };
 
 private:
-    unique_ptr<Node> head_{};
+    unique_ptr<Node> head_;
     Node *tail_ = nullptr;
 
 public:
-    MyThreadSafeQueue() = default;
+    MyThreadSafeQueue()
+            : head_(make_unique<Node>())
+            , tail_(head_.get())
+    {}
 
     MyThreadSafeQueue(const MyThreadSafeQueue &other) = delete;
     MyThreadSafeQueue& operator=(const MyThreadSafeQueue &other) = delete;
 
     shared_ptr<T> tryPop()
     {
-        if(! head_){
+        if (head_.get() == tail_) {
             return {};
         }
 
-        const shared_ptr<T> res = make_shared<T>(move(head_->Data));
+        const shared_ptr<T> firstElement(head_->Data);
 
         const unique_ptr<Node> oldHead = move(head_);
         head_ = move(oldHead->Next);
 
-        return res;
+        return firstElement;
     }
 
     void push(T newVal)
     {
-        unique_ptr<Node> p = make_unique<Node>(move(newVal));
+        shared_ptr<T> newData = make_shared<T>(move(newVal));
+        unique_ptr<Node> p = make_unique<Node>();
+        tail_->Data = newData;
+
         Node *const newTail = p.get();
-
-        if (tail_) {
-            tail_->Next = move(p);
-        } else {
-            head_ = move(p);
-        }
-
+        tail_->Next = move(p);
         tail_ = newTail;
     }
 };

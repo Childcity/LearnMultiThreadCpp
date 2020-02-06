@@ -21,8 +21,8 @@ int main()
 
 
     {
-        MyThreadSafeQueue<string> mySafeQueue;
-        mySafeQueue.push("Queue !");
+        MyThreadSafeQueue<int> mySafeQueue;
+        mySafeQueue.push(12);
         cout << *mySafeQueue.tryPop() << endl;
         return 0;
     }
