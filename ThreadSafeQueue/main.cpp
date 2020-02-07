@@ -14,18 +14,19 @@ int main()
     atomic<bool> startWorking = false;
     thread t[threadCount];
 
-    StdThreadSafeQueue<string> safeQueue;
+    //StdThreadSafeQueue<string> stdSafeQueue;
+    MyThreadSafeQueue<string> mySafeQueue;
     mutex mainMutex;
 
     srand(static_cast<unsigned int>(time(nullptr)));
 
 
-    {
-        MyThreadSafeQueue<int> mySafeQueue;
-        mySafeQueue.push(12);
-        cout << *mySafeQueue.tryPop() << endl;
-        return 0;
-    }
+//    {
+//        MyThreadSafeQueue<int> mySafeQueue;
+//        mySafeQueue.push(12);
+//        cout << *mySafeQueue.tryPop() << endl;
+//        return 0;
+//    }
 
 
     for (int i = 0; i < threadCount; ++i) {
@@ -36,14 +37,15 @@ int main()
 
                 while (true) {
                     try {
-                        safeQueue.push(to_string(rand())); // NOLINT
+                        //stdSafeQueue.push(to_string(rand())); // NOLINT
+                        mySafeQueue.push(to_string(rand())); // NOLINT
 
                         {// sleep 10 microseconds
                             using namespace std::chrono;
                             auto curr = high_resolution_clock::now();
                             while (duration_cast<microseconds>(high_resolution_clock::now() - curr).count() < 10);
                         }
-                    } catch (exception &ex){
+                    } catch (exception &ex) {
                         break;
                     }
                 }
@@ -54,10 +56,12 @@ int main()
                     try {
                         lock_guard<mutex> lock(mainMutex);
 
-                        auto val = safeQueue.tryPop();
-                        auto size = safeQueue.size();
+//                        auto val = stdSafeQueue.tryPop();
+//                        auto size = stdSafeQueue.size();
+                        auto val = mySafeQueue.tryPop();
+                        auto size = 0;
                         cout << "pop: " << (val == nullptr ? "Empty" : *val) << " size: " << size << endl;
-                    } catch (exception &ex){
+                    } catch (exception &ex) {
                         break;
                     }
                 }

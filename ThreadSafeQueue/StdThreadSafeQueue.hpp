@@ -31,6 +31,9 @@ private:
 public:
     StdThreadSafeQueue() = default;
 
+    StdThreadSafeQueue(const StdThreadSafeQueue &other) = delete;
+    StdThreadSafeQueue& operator=(const StdThreadSafeQueue &other) = delete;
+
     ~StdThreadSafeQueue() = default;
 
     void push(T val)
