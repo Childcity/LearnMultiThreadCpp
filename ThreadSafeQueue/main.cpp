@@ -20,19 +20,10 @@ int main()
 
     srand(static_cast<unsigned int>(time(nullptr)));
 
-
-//    {
-//        MyThreadSafeQueue<int> mySafeQueue;
-//        mySafeQueue.push(12);
-//        cout << *mySafeQueue.tryPop() << endl;
-//        return 0;
-//    }
-
-
     for (int i = 0; i < threadCount; ++i) {
         t[i] = thread{[&](int i){
 
-            if(i > 3) {
+            if(i > 3) { // This is 'Writer Thread'
                 while (!startWorking.load(memory_order_acquire)); // wait for all treads started
 
                 while (true) {
@@ -49,7 +40,7 @@ int main()
                         break;
                     }
                 }
-            } else {
+            } else { // This is 'Reader Thread'
                 while (!startWorking.load(memory_order_acquire)); // wait for all treads started
 
                 while (true) {
@@ -59,7 +50,7 @@ int main()
 //                        auto val = stdSafeQueue.tryPop();
 //                        auto size = stdSafeQueue.size();
                         auto val = mySafeQueue.tryPop();
-                        auto size = 0;
+                        auto size = 0;//mySafeQueue.size(); 
                         cout << "pop: " << (val == nullptr ? "Empty" : *val) << " size: " << size << endl;
                     } catch (exception &ex) {
                         break;

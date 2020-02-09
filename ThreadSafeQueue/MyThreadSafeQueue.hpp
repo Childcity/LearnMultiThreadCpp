@@ -98,6 +98,27 @@ public:
         return head_.get() == getTail();
     }
 
+    // Very long and blocking operation!
+    // Blocks Head and tail!
+    size_t size() const
+    {
+        size_t size = 0;
+        Node *nodePtr = nullptr;
+
+        lock_guard<mutex> headLock(headMutex_);
+        lock_guard<mutex> tailLock(tailMutex_);
+        {
+            nodePtr = head_.get();
+            while (nodePtr != tail_)
+            {
+                nodePtr = nodePtr->Next.get();
+                size++;
+            }
+        }
+
+        return size;
+    }
+
 private:
     Node* getTail() const
     {
