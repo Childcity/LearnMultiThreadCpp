@@ -23,7 +23,7 @@ int main()
     for (int i = 0; i < threadCount; ++i) {
         t[i] = thread{[&](int i){
 
-            if(i > 3) { // This is 'Writer Thread'
+            if(i > 3 /*6*/) { // This is 'Writer Thread'
                 while (!startWorking.load(memory_order_acquire)); // wait for all treads started
 
                 while (true) {
@@ -34,7 +34,7 @@ int main()
                         {// sleep 10 microseconds
                             using namespace std::chrono;
                             auto curr = high_resolution_clock::now();
-                            while (duration_cast<microseconds>(high_resolution_clock::now() - curr).count() < 10);
+                            while (duration_cast<microseconds>(high_resolution_clock::now() - curr).count() < 10 /*1800*/);
                         }
                     } catch (exception &ex) {
                         break;
