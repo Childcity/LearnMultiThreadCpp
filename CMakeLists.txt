@@ -11,9 +11,13 @@ if (UNIX)
 endif (UNIX)
 
 
+option(BUILD_SwapTrick "Enable building SwapTrick" ON)
 option(BUILD_ThreadSafeQueue "Enable building ThreadSafeQueue" ON)
 option(BUILD_ThreadSafeStack "Enable building ThreadSafeStack" ON)
 
+if(BUILD_SwapTrick)
+    add_subdirectory(SwapTrick)
+endif()
 if(BUILD_ThreadSafeQueue)
     add_subdirectory(ThreadSafeQueue)
 endif()
