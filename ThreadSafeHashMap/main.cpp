@@ -14,7 +14,7 @@ int main()
     atomic<bool> startWorking = false;
     thread t[threadCount];
 
-    //MyThreadSafeQueue<string> mySafeQueue;
+    ThreadSafeHashMap<int, string, std::hash<int>> safeHashMap;
     mutex mainMutex;
 
     srand(static_cast<unsigned int>(time(nullptr)));
@@ -27,7 +27,7 @@ int main()
 
                 while (true) {
                     try {
-                        //mySafeQueue.push(to_string(rand())); // NOLINT
+                        safeHashMap.addOrUpdate(rand(), to_string(rand())); // NOLINT
 
                         {// sleep 10 microseconds
                             using namespace std::chrono;
@@ -47,7 +47,7 @@ int main()
 
 //                        auto val = stdSafeQueue.tryPop();
 //                        auto size = stdSafeQueue.size();
-                        cout << "pop: " << (val == nullptr ? "Empty" : *val) << " size: " << size << endl;
+//                        cout << "pop: " << (val == nullptr ? "Empty" : *val) << " size: " << size << endl;
                     } catch (exception &ex) {
                         break;
                     }
