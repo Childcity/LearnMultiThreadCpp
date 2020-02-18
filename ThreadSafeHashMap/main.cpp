@@ -12,6 +12,7 @@ int main()
 {
     const int threadCount = 8;
     atomic<bool> startWorking = false;
+    atomic<int> keyNum = 0;
     thread t[threadCount];
 
     ThreadSafeHashMap<int, string, std::hash<int>> safeHashMap;
@@ -27,7 +28,7 @@ int main()
 
                 while (true) {
                     try {
-                        safeHashMap.addOrUpdate(rand(), to_string(rand())); // NOLINT
+                        safeHashMap.addOrUpdate(keyNum.fetch_add(1, std::memory_order_relaxed), to_string(rand())); // NOLINT
 
                         {// sleep 10 microseconds
                             using namespace std::chrono;
@@ -45,9 +46,10 @@ int main()
                     try {
                         lock_guard<mutex> lock(mainMutex);
 
-//                        auto val = stdSafeQueue.tryPop();
-//                        auto size = stdSafeQueue.size();
-//                        cout << "pop: " << (val == nullptr ? "Empty" : *val) << " size: " << size << endl;
+
+                        //const auto key = keyNum.fetch_sub(1, std::memory_order_relaxed);
+                        //const auto val = safeHashMap.valueFor(key, "Empty");
+                        //cout << "value: " << val << endl;
                     } catch (exception &ex) {
                         break;
                     }

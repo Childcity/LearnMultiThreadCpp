@@ -67,7 +67,7 @@ private:
     Hash hasher_;
 
 public:
-    ThreadSafeHashMap(size_t bucketsNum = 19, const Hash &hasher = Hash())
+    explicit ThreadSafeHashMap(size_t bucketsNum = 19, const Hash &hasher = Hash())
         : buckets_(bucketsNum)
         , hasher_(hasher)
     {
