@@ -28,7 +28,7 @@ int main()
 
                 while (true) {
                     try {
-                        safeHashMap.addOrUpdate(keyNum.fetch_add(1, std::memory_order_relaxed), to_string(rand())); // NOLINT
+                        safeHashMap.addOrUpdate(21, to_string(rand())); // NOLINT
 
                         {// sleep 10 microseconds
                             using namespace std::chrono;
