@@ -102,7 +102,7 @@ private:
 };
 
 
-    } // namespace threadsafeqeue
+    } // namespace threadsafehash
 } // namespace childcity
 
 #endif //LEARNMULTITHREADC_THREADSAFEHASHMAP_HPP
