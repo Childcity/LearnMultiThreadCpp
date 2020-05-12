@@ -1,5 +1,5 @@
 #include "StdThreadSafeQueue.hpp"
-#include "MyThreadSafeQueue.hpp"
+#include "ThreadSafeQueue.hpp"
 
 #include <iostream>
 #include <string>
@@ -8,14 +8,17 @@
 
 using namespace std;
 
+using ThreadSafeQueue = childcity::threadsafeqeue::ThreadSafeQueue<string>;
+using StdThreadSafeQueue = childcity::threadsafeqeue::StdThreadSafeQueue<string>;
+
 int main()
 {
     const int threadCount = 8;
     atomic<bool> startWorking = false;
     thread t[threadCount];
 
-    //StdThreadSafeQueue<string> stdSafeQueue;
-    MyThreadSafeQueue<string> mySafeQueue;
+    StdThreadSafeQueue stdSafeQueue;
+    ThreadSafeQueue mySafeQueue;
     mutex mainMutex;
 
     srand(static_cast<unsigned int>(time(nullptr)));
@@ -50,7 +53,7 @@ int main()
 //                        auto val = stdSafeQueue.tryPop();
 //                        auto size = stdSafeQueue.size();
                         auto val = mySafeQueue.tryPop();
-                        auto size = 0;//mySafeQueue.size(); 
+                        auto size = 0;//mySafeQueue.size();
                         cout << "pop: " << (val == nullptr ? "Empty" : *val) << " size: " << size << endl;
                     } catch (exception &ex) {
                         break;

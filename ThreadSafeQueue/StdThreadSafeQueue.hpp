@@ -11,22 +11,17 @@
 #include <condition_variable>
 #include <queue>
 
-using std::move;
-using std::shared_ptr;
-using std::make_shared;
-using std::condition_variable;
-using std::lock_guard;
-using std::unique_lock;
-using std::queue;
-using std::mutex;
+
+namespace childcity {
+    namespace threadsafeqeue {
 
 template<class T>
 struct StdThreadSafeQueue {
 
 private:
-    mutable mutex m_{};
-    queue<shared_ptr<T>> data_{};
-    condition_variable dataCond_{};
+    mutable std::mutex m_{};
+    std::queue<std::shared_ptr<T>> data_{};
+    std::condition_variable dataCond_{};
 
 public:
     StdThreadSafeQueue() = default;
@@ -38,63 +33,67 @@ public:
 
     void push(T val)
     {
-        shared_ptr<T> data = make_shared<T>(move(val));
-        lock_guard<mutex> lk(m_);
-        data_.emplace(move(data));
+        std::shared_ptr<T> data = std::make_shared<T>(std::move(val));
+        std::lock_guard<std::mutex> lk(m_);
+        data_.emplace(std::move(data));
         dataCond_.notify_one();
     }
 
     void waitAndPop(T &value)
     {
-        unique_lock<mutex> lk(m_);
+        std::unique_lock<std::mutex> lk(m_);
         dataCond_.wait(lk, [this]{ return !data_.empty(); });
-        value = move(*data_.front());
+        value = std::move(*data_.front());
         data_.pop();
     }
 
-    shared_ptr<T> waitAndPop()
+    std::shared_ptr<T> waitAndPop()
     {
-        unique_lock<mutex> lk(m_);
+        std::unique_lock<std::mutex> lk(m_);
         dataCond_.wait(lk, [this] { return !data_.empty(); });
-        shared_ptr<T> res(data_.front());
+        std::shared_ptr<T> res(data_.front());
         data_.pop();
         return res;
     }
 
     bool tryPop(T &val)
     {
-        lock_guard<mutex> lk(m_);
+        std::lock_guard<std::mutex> lk(m_);
         if (data_.empty()) {
             return {};
         }
-        val = move(*data_.front());
+        val = std::move(*data_.front());
         data_.pop();
         return true;
     }
 
-    shared_ptr<T> tryPop()
+    std::shared_ptr<T> tryPop()
     {
-        lock_guard<mutex> lk(m_);
+        std::lock_guard<std::mutex> lk(m_);
         if (data_.empty()) {
             return {};
         }
-        shared_ptr<T> res(data_.front());
+        std::shared_ptr<T> res(data_.front());
         data_.pop();
         return res;
     }
 
     bool empty() const
     {
-        lock_guard<mutex> lk(m_);
+        std::lock_guard<std::mutex> lk(m_);
         return data_.empty();
     }
 
     size_t size() const
     {
-        lock_guard<mutex> lock(m_);
+        std::lock_guard<std::mutex> lock(m_);
         return data_.size();
     }
 };
+
+
+    } // namespace threadsafeqeue
+} // namespace childcity
 
 
 #endif //LEARNMULTITHREADC_STDTHREADSAFEQUEUE_HPP

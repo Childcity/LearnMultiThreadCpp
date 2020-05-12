@@ -17,6 +17,11 @@ using std::shared_mutex;
 using std::shared_lock;
 using std::unique_lock;
 
+
+namespace childcity {
+namespace threadsafeqeue {
+
+
 template <class Key, class Value, class Hash = std::hash<Key>>
 struct ThreadSafeHashMap {
 private:
@@ -95,9 +100,13 @@ private:
 
     // return adress of value that is storing in unique_ptr
     Bucket &getBucket(const Key &key) const {
-        const size_t bucketIndex = std::hash<Key>(key) & buckets_.size();
+        const size_t bucketIndex = std::hash<Key>{}(key) & buckets_.size();
         return *buckets_[bucketIndex];
     }
 };
+
+
+    } // namespace threadsafeqeue
+} // namespace childcity
 
 #endif //LEARNMULTITHREADC_THREADSAFEHASHMAP_HPP

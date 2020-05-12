@@ -3,5 +3,5 @@ project(ThreadSafeQueue)
 
 add_executable(ThreadSafeQueue
         StdThreadSafeQueue.hpp
-        MyThreadSafeQueue.hpp
+        ThreadSafeQueue.hpp
         main.cpp)

@@ -7,5 +7,5 @@
       ограничением по времени в случае, когда предикат не указывается.
 
 148 - пример parallel_quick_sort() на future
-244 - пример hreadsafe_queue 
-255 - пример hreadsafe_lookup_table  (map) 
+244 - пример treadsafe_queue 
+255 - пример treadsafe_lookup_table  (map) 
