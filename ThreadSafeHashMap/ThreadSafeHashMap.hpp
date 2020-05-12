@@ -12,14 +12,9 @@
 #include <shared_mutex>
 #include <memory>
 
-using std::unique_ptr;
-using std::shared_mutex;
-using std::shared_lock;
-using std::unique_lock;
-
 
 namespace childcity {
-namespace threadsafeqeue {
+namespace threadsafehash {
 
 
 template <class Key, class Value, class Hash = std::hash<Key>>
@@ -31,19 +26,19 @@ private:
         using BucketData = std::list<BucketValue>;
 
         BucketData data_;
-        mutable shared_mutex bucketMutex_;
+        mutable std::shared_mutex bucketMutex_;
 
     public:
         Value valueFor(const Key &key, const Value &defaultVal)
         {
-            shared_lock<shared_mutex> lock(bucketMutex_);
+            std::shared_lock<std::shared_mutex> lock(bucketMutex_);
             const auto foundedEntry = findEntryFor(key);
             return (foundedEntry == data_.end()) ? defaultVal : foundedEntry->second;
         }
 
         void addOrUpdate(const Key &key, const Value &value)
         {
-            unique_lock<shared_mutex> lock(bucketMutex_);
+            std::unique_lock<std::shared_mutex> lock(bucketMutex_);
             auto foundedEntry = findEntryFor(key);
             if(foundedEntry == data_.end()){
                 data_.emplace_back(BucketValue(key, value));
@@ -54,7 +49,7 @@ private:
 
         void erase(const Key &key)
         {
-            unique_lock<shared_mutex> lock(bucketMutex_);
+            std::unique_lock<std::shared_mutex> lock(bucketMutex_);
             const auto foundedEntry = findEntryFor(key);
             if(foundedEntry != data_.end()) {
                 data_.erase(foundedEntry);
@@ -68,7 +63,7 @@ private:
     };
 
 private:
-    std::vector<unique_ptr<Bucket>> buckets_;
+    std::vector<std::unique_ptr<Bucket>> buckets_;
     Hash hasher_;
 
 public:
@@ -98,9 +93,10 @@ public:
 
 private:
 
-    // return adress of value that is storing in unique_ptr
+    // return adress of value that is storing in std::unique_ptr
     Bucket &getBucket(const Key &key) const {
-        const size_t bucketIndex = std::hash<Key>{}(key) & buckets_.size();
+        static const size_t lastIndex = buckets_.size() - 1;
+        const size_t bucketIndex = hasher_(key) & lastIndex;
         return *buckets_[bucketIndex];
     }
 };

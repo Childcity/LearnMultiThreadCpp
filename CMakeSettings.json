@@ -10,7 +10,28 @@
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
-      "variables": [],
+      "variables": [
+        {
+          "name": "BUILD_SwapTrick",
+          "value": "True",
+          "type": "BOOL"
+        },
+        {
+          "name": "BUILD_ThreadSafeQueue",
+          "value": "True",
+          "type": "BOOL"
+        },
+        {
+          "name": "BUILD_ThreadSafeStack",
+          "value": "True",
+          "type": "BOOL"
+        },
+        {
+          "name": "BUILD_ThreadSafeHashMap",
+          "value": "True",
+          "type": "BOOL"
+        }
+      ],
       "intelliSenseMode": "windows-msvc-x64"
     },
     {

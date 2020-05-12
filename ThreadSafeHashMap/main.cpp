@@ -7,7 +7,7 @@
 #include <mutex>
 
 using namespace std;
-using ThreadSafeHashMap = childcity::threadsafeqeue::ThreadSafeHashMap<int, string, std::hash<int>>;
+using ThreadSafeHashMap = childcity::threadsafehash::ThreadSafeHashMap<int, string, std::hash<int>>;
 
 int main()
 {
@@ -30,7 +30,8 @@ int main()
                 while (true) {
                     try {
                         int newKey = keyNum.fetch_add(1);
-                        safeHashMap.addOrUpdate(21, to_string(rand())); // NOLINT
+                        //cout << "key: " << newKey << endl;
+                        safeHashMap.addOrUpdate(newKey, to_string(rand())); // NOLINT
 
                         {// sleep 10 microseconds
                             using namespace std::chrono;
@@ -49,8 +50,8 @@ int main()
                         lock_guard<mutex> lock(mainMutex);
 
                         const auto key = keyNum.fetch_sub(1) - 1;
-                        const auto val = safeHashMap.valueFor(21, "Empty");
-                        cout << "value: " << val << endl;
+                        const auto val = safeHashMap.valueFor(key, "Empty");
+                        cout << "key: " << key << " value: " << val << endl;
                     } catch (exception &ex) {
                         break;
                     }

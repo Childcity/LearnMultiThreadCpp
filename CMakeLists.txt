@@ -11,9 +11,9 @@ if (UNIX)
 endif (UNIX)
 
 
-option(BUILD_SwapTrick "Enable building SwapTrick" OFF)
-option(BUILD_ThreadSafeQueue "Enable building ThreadSafeQueue" OFF)
-option(BUILD_ThreadSafeStack "Enable building ThreadSafeStack" OFF)
+option(BUILD_SwapTrick "Enable building SwapTrick" ON)
+option(BUILD_ThreadSafeQueue "Enable building ThreadSafeQueue" ON)
+option(BUILD_ThreadSafeStack "Enable building ThreadSafeStack" ON)
 option(BUILD_ThreadSafeHashMap "Enable building ThreadSafeHashMap" ON)
 
 if(BUILD_SwapTrick)
