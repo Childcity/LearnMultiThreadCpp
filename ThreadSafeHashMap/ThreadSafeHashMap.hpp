@@ -87,7 +87,7 @@ public:
         getBucket(key).addOrUpdate(key, val);
     }
 
-    void erase(const Key &key) {
+    void remove(const Key &key) {
         getBucket(key).erase(key);
     }
 
