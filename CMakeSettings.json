@@ -13,22 +13,22 @@
       "variables": [
         {
           "name": "BUILD_SwapTrick",
-          "value": "True",
+          "value": "False",
           "type": "BOOL"
         },
         {
           "name": "BUILD_ThreadSafeQueue",
-          "value": "True",
+          "value": "False",
           "type": "BOOL"
         },
         {
           "name": "BUILD_ThreadSafeStack",
-          "value": "True",
+          "value": "False",
           "type": "BOOL"
         },
         {
           "name": "BUILD_ThreadSafeHashMap",
-          "value": "True",
+          "value": "False",
           "type": "BOOL"
         }
       ],

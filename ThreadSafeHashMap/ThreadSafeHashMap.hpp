@@ -11,6 +11,7 @@
 #include <vector>
 #include <shared_mutex>
 #include <memory>
+#include <map>
 
 
 namespace childcity {
@@ -56,6 +57,14 @@ private:
             }
         }
 
+        std::shared_mutex & getMutex() const {
+            return bucketMutex_;
+        }
+
+        BucketData & getData() {
+            return data_;
+        }
+
     private:
         auto findEntryFor(const Key &key) {
             return std::find_if(data_.begin(), data_.end(), [&](const BucketValue &val){ return val.first == key; });
@@ -89,6 +98,24 @@ public:
 
     void remove(const Key &key) {
         getBucket(key).erase(key);
+    }
+
+    std::map<Key, Value> toMap() const 
+    {
+        // lock on write all buckets
+        std::vector<std::unique_lock<std::shared_mutex>> locks;
+        for (const auto &bucket : buckets_) {
+            locks.emplace_back(std::unique_lock<std::shared_mutex>(bucket->getMutex()));
+        }
+
+        std::map<Key, Value> map;
+        for (const auto &bucket : buckets_) {
+            for (const auto &backetVal : bucket->getData()) {
+                map.emplace(backetVal);
+            }
+        }
+
+        return map;
     }
 
 private:
