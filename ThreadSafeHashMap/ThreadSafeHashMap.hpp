@@ -110,7 +110,7 @@ public:
 
         std::map<Key, Value> map;
         for (const auto &bucket : buckets_) {
-            for (const auto &backetVal : bucket->getData()) {
+            for (const std::pair<Key, Value> &backetVal : bucket->getData()) {
                 map.emplace(backetVal);
             }
         }
