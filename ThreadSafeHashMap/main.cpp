@@ -47,10 +47,10 @@ int main()
 
                 while (true) {
                     try {
+                        lock_guard<mutex> lock(mainMutex);
+
                         const auto key = keyNum.fetch_sub(1) - 1;
                         const auto val = safeHashMap.valueFor(key, "Empty");
-
-                        lock_guard<mutex> lock(mainMutex);
                         cout << "key: " << key << " value: " << val << endl;
                     } catch (exception &ex) {
                         break;
