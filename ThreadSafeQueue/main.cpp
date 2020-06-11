@@ -26,7 +26,7 @@ int main()
     for (int i = 0; i < threadCount; ++i) {
         t[i] = thread{[&](int i){
 
-            if(i > 3 /*6*/) { // This is 'Writer Thread'
+            if(i > 4 /*6*/) { // This is 'Writer Thread'
                 while (!startWorking.load(memory_order_acquire)); // wait for all treads started
 
                 while (true) {
@@ -48,12 +48,12 @@ int main()
 
                 while (true) {
                     try {
-                        lock_guard<mutex> lock(mainMutex);
-
 //                        auto val = stdSafeQueue.tryPop();
 //                        auto size = stdSafeQueue.size();
                         auto val = mySafeQueue.tryPop();
-                        auto size = 0;//mySafeQueue.size();
+                        auto size = -1;//mySafeQueue.size();
+
+                        lock_guard<mutex> lock(mainMutex);
                         cout << "pop: " << (val == nullptr ? "Empty" : *val) << " size: " << size << endl;
                     } catch (exception &ex) {
                         break;
