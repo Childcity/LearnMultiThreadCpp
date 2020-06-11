@@ -33,7 +33,7 @@
         },
         {
           "name": "BUILD_ThreadSafeList",
-          "value": "true",
+          "value": "True",
           "type": "BOOL"
         }
       ],
