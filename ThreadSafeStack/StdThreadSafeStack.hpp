@@ -6,6 +6,7 @@
 #define LEARNMULTITHREADC_THREADSAFESTACK_HPP
 
 #include <mutex>
+#include <memory>
 #include <stack>
 #include <exception>
 
@@ -31,8 +32,8 @@ public:
 
     StdThreadSafeStack(const StdThreadSafeStack &other)
     {
-        lock_guard<std::mutex> lock(other.mutex_);
-        data_ = other.data_; // копирование происходит в теле конструктора
+        std::lock_guard<std::mutex> lock(other.mutex_);
+        data_ = other.data_; // РєРѕРїРёСЂРѕРІР°РЅРёРµ РїСЂРѕРёСЃС…РѕРґРёС‚ РІ С‚РµР»Рµ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР°
     }
 
     StdThreadSafeStack(const StdThreadSafeStack &&) = delete;
@@ -49,12 +50,12 @@ public:
     {
         std::lock_guard<std::mutex> lock(mutex_);
 
-        //Перед тем как выталкивать значение, проверяем, не пуст ли стек
+        //РџРµСЂРµРґ С‚РµРј РєР°Рє РІС‹С‚Р°Р»РєРёРІР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ, РїСЂРѕРІРµСЂСЏРµРј, РЅРµ РїСѓСЃС‚ Р»Рё СЃС‚РµРє
         if(data_.empty())
             throw EmptyStackException();
 
-        const std::shared_ptr<T> res(make_shared<T>(data_.top()));
-        data_.pop(); // Перед тем как модифицировать стек в функции pop, выделяем память для возвращаемого значения
+        const std::shared_ptr<T> res(std::make_shared<T>(data_.top()));
+        data_.pop(); // РџРµСЂРµРґ С‚РµРј РєР°Рє РјРѕРґРёС„РёС†РёСЂРѕРІР°С‚СЊ СЃС‚РµРє РІ С„СѓРЅРєС†РёРё pop, РІС‹РґРµР»СЏРµРј РїР°РјСЏС‚СЊ РґР»СЏ РІРѕР·РІСЂР°С‰Р°РµРјРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ
 
         return res;
     }
@@ -63,7 +64,7 @@ public:
     {
         std::lock_guard<std::mutex> lock(mutex_);
 
-        //Перед тем как выталкивать значение, проверяем, не пуст ли стек
+        //РџРµСЂРµРґ С‚РµРј РєР°Рє РІС‹С‚Р°Р»РєРёРІР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ, РїСЂРѕРІРµСЂСЏРµРј, РЅРµ РїСѓСЃС‚ Р»Рё СЃС‚РµРє
         if(data_.empty())
             throw EmptyStackException();
 

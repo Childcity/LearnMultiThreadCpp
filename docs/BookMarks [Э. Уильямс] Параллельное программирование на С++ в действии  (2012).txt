@@ -8,4 +8,9 @@
 
 148 - пример parallel_quick_sort() на future
 244 - пример treadsafe_queue 
-255 - пример treadsafe_lookup_table  (map) 
+249 - пример treadsafe_lookup_table  (map)
+255 - пример treadsafe_list
+
+264 - определение структурам данным, свободных от ожидания
+267 - пример lock_free_stack
+
