@@ -122,7 +122,7 @@ private:
 
     // return adress of value that is storing in std::unique_ptr
     Bucket &getBucket(const Key &key) const {
-        static const size_t lastIndex = buckets_.size() - 1;
+        const size_t lastIndex = buckets_.size() - 1;
         const size_t bucketIndex = hasher_(key) & lastIndex;
         return *buckets_[bucketIndex];
     }
