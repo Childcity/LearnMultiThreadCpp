@@ -33,3 +33,4 @@ if(BUILD_ThreadSafeList)
     add_subdirectory(ThreadSafeList)
 endif()
 
+add_executable(LockFreeStack LockFreeStack.cpp)
